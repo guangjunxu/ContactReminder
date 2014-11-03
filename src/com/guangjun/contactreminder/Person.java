@@ -27,7 +27,7 @@ public class Person
 		lastdate="";
 //		time1=toTimeString(8,0);//时间默认8点
 		
-		nextdate=null;
+		nextdate="";
 //		time2=null;
 //		
 //		title="";
@@ -39,8 +39,8 @@ public class Person
 		
 		phone="";
 		email="";
-		level=50;
-		frequency=7;
+		level=0;
+		frequency=50;
 				
 	}
 	

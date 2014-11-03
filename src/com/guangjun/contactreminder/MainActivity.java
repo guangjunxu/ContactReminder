@@ -4,6 +4,7 @@ import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import com.guangjun.contactreminder.Constant.WhoCall;
 import com.guangjun.contactreminder.Person;
 import com.guangjun.contactreminder.DateQuot;
 import static com.guangjun.contactreminder.DBUtil.*;
@@ -14,12 +15,15 @@ import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +43,8 @@ public class MainActivity extends ActionBarActivity {
 
 	static ArrayList<Person> allperson = new ArrayList<Person>();
 	Person tmpper;
+	WhoCall wcNeworEdit;
+	Layout curr = null;// 记录当前界面的枚举类型
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class MainActivity extends ActionBarActivity {
 
 	public void gotoMain() {
 		setContentView(R.layout.activity_main);
+		curr = Layout.MAIN;
 
 		final ArrayList<Boolean> alIsSelected = new ArrayList<Boolean>();// 记录ListView中哪项选中了的标志位
 
@@ -130,8 +137,19 @@ public class MainActivity extends ActionBarActivity {
 					alIsSelected.set(i, false);
 				}
 				alIsSelected.set(arg2, true);
-				
+
+				wcNeworEdit = WhoCall.EDIT;
 				gotoPersonDetail();
+			}
+		});
+		
+		lv_main.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				return false;
 			}
 		});
 
@@ -141,14 +159,15 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				tmpper = new Person();
-				gotoSetting();
+				wcNeworEdit = WhoCall.NEW;
+				gotoPersonDetail();
 			}
 		});
 
 	}
 
 	public void gotoSetting() {
-		setContentView(R.layout.add_person);
+		// setContentView(R.layout.add_person);
 		// curr = Layout.SETTING;
 		//
 		// TextView tvTitle = (TextView) findViewById(R.id.tvnewscheduleTitle);
@@ -165,6 +184,12 @@ public class MainActivity extends ActionBarActivity {
 		final EditText etEmail = (EditText) findViewById(R.id.et_email);
 		final SeekBar barFrequency = (SeekBar) findViewById(R.id.bar_frequency);
 		final RatingBar barLevel = (RatingBar) findViewById(R.id.bar_level);
+		
+		etName.setText(tmpper.getName());
+		etPhone.setText(tmpper.getPhone());
+		etEmail.setText(tmpper.getEmail());
+		barFrequency.setProgress(tmpper.getFrequency());
+		barLevel.setProgress(tmpper.getLevel());
 
 		btCancle.setOnClickListener(new OnClickListener() {
 
@@ -200,7 +225,12 @@ public class MainActivity extends ActionBarActivity {
 				tmpper.setLastdate(lastdate);
 				tmpper.setNextdate(DateQuot.getQuotNextDate(lastdate, days));
 
-				insertPerson(MainActivity.this);
+				if(wcNeworEdit==WhoCall.EDIT){
+					updatePerson(MainActivity.this);
+				}
+				else if(wcNeworEdit==WhoCall.NEW){
+					insertPerson(MainActivity.this);
+				}
 
 				gotoMain();
 			}
@@ -210,17 +240,56 @@ public class MainActivity extends ActionBarActivity {
 
 	public void gotoPersonDetail() {
 		setContentView(R.layout.person_detail);
+		curr = Layout.SETTING;
 
 		TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
 
 		tabHost.setup();
 
-		tabHost.setBackgroundColor(Color.argb(150, 22, 70, 150));
+		// tabHost.setBackgroundColor(Color.argb(150, 22, 70, 150));
 
-		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("tab1_ind")
+		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("设置")
 				.setContent(R.id.layout_setting));
-		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("tab2_ind")
-				.setContent(R.id.tab2));
+		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("联系")
+				.setContent(R.id.layout_detail));
+
+		if (wcNeworEdit == WhoCall.NEW) {
+			tabHost.setCurrentTab(0);
+		} else if (wcNeworEdit == WhoCall.EDIT) {
+			tabHost.setCurrentTab(1);
+		}
+		gotoSetting();
+
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == 4) {
+			switch (curr) {
+				case MAIN:// 在主界面的话退出程序
+					System.exit(0);
+					break;
+				case SETTING:// 在日程编辑界面的话返回主界面
+					gotoMain();
+					break;
+				case TYPE_MANAGER:// //在类型管理界面的话返回日程编辑界面
+					gotoSetting();
+					break;
+				case SEARCH:// 在日程查找界面的话返回主界面
+					gotoMain();
+					break;
+				case SEARCH_RESULT:// 在日程查找结果界面的话返回日程查找界面
+//					gotoSearch();
+					break;
+				case HELP:// 在帮助界面的话返回主界面
+					gotoMain();
+					break;
+				case ABOUT:
+					gotoMain();
+					break;
+			}
+		}
+		return true;
 	}
 
 	@Override

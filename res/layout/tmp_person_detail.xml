@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@attr/titleTextStyle"
+            android:text="姓名" />
+
+        <TextView android:text="n天前" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/btn_phone"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:background="@drawable/phone" />
+
+        <ImageButton
+            android:id="@+id/btn_message"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:background="@drawable/message" />
+
+        <ImageButton
+            android:id="@+id/btn_email"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:background="@drawable/email" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -232,27 +232,27 @@ public class DBUtil
 		}
 	}
 	
-//	public static void updateSchedule(RcActivity father)//更新日程
-//	{
-//		try
-//		{
-//			sld=SQLiteDatabase.openDatabase
-//				(
-//					"/data/data/com.bn.rcgl/myDb", 
-//					null, 
-//					SQLiteDatabase.OPEN_READWRITE				
-//				);
-//			String sql=father.schTemp.toUpdateSql(father);
-//			sld.execSQL(sql);
-//			sld.close();
-//		}
-//		catch(Exception e)
-//		{
-//			Toast.makeText(father, "日程数据库更新错误："+e.toString(), Toast.LENGTH_LONG).show();
-//			Log.d("exception!!",e.toString());
-//		}
-//	}
-//	
+	public static void updatePerson(MainActivity father)//更新日程
+	{
+		try
+		{
+			sld=SQLiteDatabase.openDatabase
+				(
+					"/data/data/com.guangjun.contactreminder/myDb", 
+					null, 
+					SQLiteDatabase.OPEN_READWRITE				
+				);
+			String sql=father.tmpper.toUpdateSql(father);
+			sld.execSQL(sql);
+			sld.close();
+		}
+		catch(Exception e)
+		{
+			Toast.makeText(father, "日程数据库更新错误："+e.toString(), Toast.LENGTH_LONG).show();
+			Log.d("exception!!",e.toString());
+		}
+	}
+	
 //	public static void deleteSchedule(RcActivity father)//删除日程
 //	{
 //		try

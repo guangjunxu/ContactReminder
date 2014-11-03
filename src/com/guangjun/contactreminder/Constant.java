@@ -21,6 +21,7 @@ public class Constant
 		NEW,//表示新建日程按钮
 		EDIT,//表示修改日程按钮
 		SEARCH_RESULT//表示查找按钮
+		
 	}
 	
 	public static enum Layout
